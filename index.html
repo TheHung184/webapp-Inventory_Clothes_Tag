@@ -52,20 +52,19 @@
   
     function download(canvas, filename) {
 
-    /// create an "off-screen" anchor tag
-    var lnk = document.createElement('a'),
-        e;
+        /// create an "off-screen" anchor tag
+        var lnk = document.createElement('a'),e;
 
-    /// the key here is to set the download attribute of the a tag
-    lnk.download = filename;
+        /// the key here is to set the download attribute of the a tag
+        lnk.download = filename;
 
-    /// convert canvas content to data-uri for link. When download
-    /// attribute is set the content pointed to by link will be
-    /// pushed as "download" in HTML5 capable browsers
-    lnk.href = c.toDataURL();
+        /// convert canvas content to data-uri for link. When download
+        /// attribute is set the content pointed to by link will be
+        /// pushed as "download" in HTML5 capable browsers
+        lnk.href = c.toDataURL();
 
-    /// create a "fake" click-event to trigger the download
-    if (document.createEvent) {
+        /// create a "fake" click-event to trigger the download
+        if (document.createEvent) {
 
         e = document.createEvent("MouseEvents");
         e.initMouseEvent("click", true, true, window,
@@ -81,11 +80,11 @@
     }
     
     //Take a picture on click
-    v.onclick = function() {
-        console.log('click');
-        sendImagefromCanvas();
-        download(myCanvas, 'untitled.png');
-    };
+    //v.onclick = function() {
+    //    console.log('click');
+    //    sendImagefromCanvas();
+    //    download(myCanvas, 'untitled.png');
+    //};
     window.onload = function () {
 
         //Get camera video
@@ -98,7 +97,7 @@
             });
 
     };
-
+    download(myCanvas, 'untitled.png');
 </script>
 </body>
 </html>
