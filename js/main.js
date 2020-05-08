@@ -21,6 +21,14 @@ button.onclick = function() {
   canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
 };
 
+const savebutton = document.querySelector('button');
+button.onclick = function() {
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+};
+
+
 const constraints = {
   audio: false,
   video: true
