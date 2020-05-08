@@ -15,10 +15,9 @@ button.onclick = function() {
 
 const savebutton = document.querySelector('#save');
 savebutton.onclick = function() {
-  const data = canvas.toDataURL('image/png');
-  const anchor = document.createElement('a');
-  anchor.href = data;
-  anchor.download = 'image.png';
+  var canvas = document.getElementById("thecanvas");
+  document.getElementById("theimage").src = canvas.toDataURL();
+  Canvas2Image.saveAsPNG(canvas);
 };
 
 
