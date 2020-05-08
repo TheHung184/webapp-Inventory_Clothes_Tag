@@ -15,14 +15,10 @@ button.onclick = function() {
 
 const savebutton = document.querySelector('#save');
 savebutton.onclick = function() {
-  var image = canvas.toDataURL(); 
-  var tmpLink = document.createElement( 'a' );      
-  tmpLink.download = 'image.png';
-  tmpLink.href = image;  
-  
-  document.body.appendChild( tmpLink );      
-  tmpLink.click();      
-  document.body.removeChild( tmpLink );
+  const data = canvas.toDataURL('image/png');
+  const anchor = document.createElement('a');
+  anchor.href = data;
+  anchor.download = 'image.png';
 };
 
 
