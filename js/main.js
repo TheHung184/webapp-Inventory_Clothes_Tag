@@ -13,15 +13,11 @@ button.onclick = function() {
   canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
 };
 
-const savebutton = document.querySelector('#save');
+const savebutton = document.querySelector('#download');
 savebutton.onclick = function() {
-  let downloadLink = document.createElement('a');
-    downloadLink.setAttribute('download', 'CanvasAsImage.png');
-    let canvas = document.getElementById('myCanvas');
-    canvas.toBlob(function(blob) {
-      let url = URL.createObjectURL(blob);
-      downloadLink.setAttribute('href', url);
-      downloadLink.click();
+        var image = canvas.toDataURL("image/png")
+                    .replace("image/png", "image/octet-stream");
+        download.setAttribute("href", image);
 };
 
 
