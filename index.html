@@ -1,92 +1,119 @@
 <!DOCTYPE html>
+<!--
+ *  Copyright (c) 2015 The WebRTC project authors. All Rights Reserved.
+ *
+ *  Use of this source code is governed by a BSD-style license
+ *  that can be found in the LICENSE file in the root of the source
+ *  tree.
+-->
 <html>
 <head>
-    <title>Post an Image test</title>
-    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-</head>
-<style>
-    /* mirror the image */
-    video, canvas {
-    transform: scale(-1, 1); /*For Firefox (& IE) */
-    -webkit-transform: scale(-1, 1); /*for Chrome & Opera (& Safari) */
-}
-</style>
-<body>
-<video id="myVideo" autoplay></video>
 
-<script>
+    <meta charset="utf-8">
+    <meta name="description" content="WebRTC code samples">
+    <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
+    <meta itemprop="description" content="Client-side WebRTC code samples">
+    <meta itemprop="image" content="../../../images/webrtc-icon-192x192.png">
+    <meta itemprop="name" content="WebRTC code samples">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta id="theme-color" name="theme-color" content="#ffffff">
 
-    let v = document.getElementById("myVideo");
+    <base target="_blank">
 
-    //create a canvas to grab an image for upload
-    let imageCanvas = document.createElement('canvas');
-    let imageCtx = imageCanvas.getContext("2d");
+    <title>getUserMedia: select resolution</title>
 
-    //Add file blob to a form and post
-    function postFile(file) {
-        let formdata = new FormData();
-        formdata.append("image", file);
-        let xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://localhost:5000/image', true);
-        xhr.onload = function () {
-            if (this.status === 200)
-                console.log(this.response);
-            else
-                console.error(xhr);
-        };
-        xhr.send(formdata);
-    }
+    <link rel="icon" sizes="192x192" href="../../../images/webrtc-icon-192x192.png">
+    <link href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="../../../css/main.css">
 
-    //Get the image from the canvas
-    function sendImagefromCanvas() {
-
-        //Make sure the canvas is set to the current video size
-        imageCanvas.width = v.videoWidth;
-        imageCanvas.height = v.videoHeight;
-
-        imageCtx.drawImage(v, 0, 0, v.videoWidth, v.videoHeight);
-
-        //Convert the canvas to blob and post the file
-        imageCanvas.toBlob(postFile, 'image/jpeg');
-    }
-  
-    function download(canvas, filename) {
-
-        /// create an "off-screen" anchor tag
-        var lnk = document.createElement('a'),e;
-
-        /// the key here is to set the download attribute of the a tag
-        lnk.download = filename;
-
-        /// convert canvas content to data-uri for link. When download
-        /// attribute is set the content pointed to by link will be
-        /// pushed as "download" in HTML5 capable browsers
-        lnk.href = c.toDataURL();
-
-        if (lnk.fireEvent) {
-
-        lnk.fireEvent("onclick");
+    <style>
+        body, html {
+            height: 100%;
         }
-    }
-    
-    //Take a picture on click
-    v.onclick = function() {
-       console.log('click');
-        sendImagefromCanvas();
-        download(myCanvas, 'untitled.png');
-    };
-    window.onload = function () {
 
-        //Get camera video
-        navigator.mediaDevices.getUserMedia({video: {width: 1280, height: 720}, audio: false})
-            .then(stream => {
-                v.srcObject = stream;
-            })
-            .catch(err => {
-                console.log('navigator.getUserMedia error: ', err)
-            });
+        button {
+            margin: 0 10px 20px 0;
+            width: 90px;
+        }
 
-    };
-</script>
+        div#buttons {
+            margin: 0 0 1em 0;
+        }
+
+        div#container {
+            max-width: 100%;
+        }
+
+        #errormessage {
+            display: none;
+            font-size: 300%;
+        }
+
+        #videoblock {
+            display: none;
+        }
+
+        p#dimensions {
+            height: 1em;
+            margin: 0 0 1.5em 0;
+        }
+
+        video {
+            background: none;
+            height: auto;
+            width: auto;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div id="container">
+
+    <h1><a href="//webrtc.github.io/samples/" title="WebRTC samples homepage">WebRTC samples</a> <span>getUserMedia: select resolution</span>
+    </h1>
+    <p></p>
+
+    <p>This example uses <a href="https://w3c.github.io/mediacapture-main/getusermedia.html#media-track-constraints"
+                            title="W3C getusermedia specification - constraints section">constraints</a>.</p>
+
+    <p>Click a button to call <code>getUserMedia()</code> with appropriate resolution.</p>
+
+    <div id="buttons">
+        <button id="qvga">QVGA</button>
+        <button id="vga">VGA</button>
+        <button id="hd">HD</button>
+        <button id="full-hd">Full HD</button>
+        <button id="fourK">4K</button>
+        <button id="eightK">8K</button>
+    </div>
+
+    <div id="videoblock">
+        <p id="dimensions"></p>
+
+        <video id="gum-res-local" playsinline autoplay></video>
+        <div id="width">
+            <label>Width <span></span>px:</label>
+            <input type="range" min="0" max="7680" value="0">
+        </div>
+        <input id="sizelock" type="checkbox">Lock video size<br>
+        <input id="aspectlock" type="checkbox">Lock aspect ratio<br>
+    </div>
+    <p id="errormessage"></p>
+
+    <p>For more information, see <a href="http://www.html5rocks.com/en/tutorials/getusermedia/intro/"
+                                    title="Media capture article by Eric Bidelman on HTML5 Rocks">Capturing Audio &amp;
+        Video in HTML5</a> on HTML5 Rocks.</p>
+
+    <a href="https://github.com/webrtc/samples/tree/gh-pages/src/content/getusermedia/resolution"
+       title="View source for this page on GitHub" id="viewSource">View source on GitHub</a>
+</div>
+
+<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<script src="js/main.js" async></script>
+
+<script src="../../../js/lib/ga.js"></script>
+
 </body>
 </html>
